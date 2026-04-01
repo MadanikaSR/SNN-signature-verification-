@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI-powered signature verification system using Siamese Neural Networks. Upload two signatures to instantly verify authenticity." />
+  <title>SignVerify AI — Signature Verification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Background orbs ── -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="logo-text">SignVerify <span class="logo-ai">AI</span></span>
+      </div>
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        <span>Powered by Siamese Neural Networks</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-tag">🔬 Deep Learning Inference</div>
+      <h1 class="hero-title">Verify Signatures<br />with <span class="gradient-text">AI Precision</span></h1>
+      <p class="hero-sub">Upload two signature images and our neural network will instantly determine if they were written by the same person — with a confidence score.</p>
+    </section>
+
+    <!-- Upload card -->
+    <section class="card upload-card">
+      <div class="upload-grid">
+
+        <!-- Image 1 -->
+        <div class="upload-zone" id="zone-1" tabindex="0" role="button" aria-label="Upload reference signature">
+          <input type="file" id="file-1" accept="image/png,image/jpeg,image/jpg" hidden />
+          <div class="zone-placeholder" id="placeholder-1">
+            <div class="zone-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <p class="zone-label">Reference Signature</p>
+            <p class="zone-hint">Click or drag & drop<br/><span>PNG / JPG · max 2 MB</span></p>
+          </div>
+          <div class="zone-preview hidden" id="preview-wrap-1">
+            <img id="preview-1" alt="Reference signature preview" />
+            <button class="remove-btn" id="remove-1" aria-label="Remove image 1">✕</button>
+            <p class="zone-filename" id="filename-1"></p>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="vs-divider">
+          <div class="vs-line"></div>
+          <div class="vs-badge">VS</div>
+          <div class="vs-line"></div>
+        </div>
+
+        <!-- Image 2 -->
+        <div class="upload-zone" id="zone-2" tabindex="0" role="button" aria-label="Upload query signature">
+          <input type="file" id="file-2" accept="image/png,image/jpeg,image/jpg" hidden />
+          <div class="zone-placeholder" id="placeholder-2">
+            <div class="zone-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <p class="zone-label">Query Signature</p>
+            <p class="zone-hint">Click or drag & drop<br/><span>PNG / JPG · max 2 MB</span></p>
+          </div>
+          <div class="zone-preview hidden" id="preview-wrap-2">
+            <img id="preview-2" alt="Query signature preview" />
+            <button class="remove-btn" id="remove-2" aria-label="Remove image 2">✕</button>
+            <p class="zone-filename" id="filename-2"></p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Verify button -->
+      <button class="verify-btn" id="verify-btn" disabled>
+        <span class="btn-spinner hidden" id="btn-spinner">
+          <svg class="spinner-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.3"/>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span id="btn-text">Verify Signature</span>
+      </button>
+
+      <!-- Toast -->
+      <div class="toast hidden" id="toast">
+        <div class="toast-icon">⚡</div>
+        <div class="toast-msg" id="toast-msg">Waking server... retrying in 5s</div>
+      </div>
+    </section>
+
+    <!-- Result card -->
+    <section class="card result-card hidden" id="result-card">
+      <div class="result-header" id="result-header">
+        <div class="result-icon" id="result-icon"></div>
+        <div>
+          <h2 class="result-verdict" id="result-verdict"></h2>
+          <p class="result-sub" id="result-sub"></p>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <p class="metric-label">Similarity Score</p>
+          <p class="metric-value" id="metric-score">—</p>
+        </div>
+        <div class="metric-box">
+          <p class="metric-label">Confidence</p>
+          <p class="metric-value" id="metric-confidence">—</p>
+        </div>
+        <div class="metric-box">
+          <p class="metric-label">Threshold</p>
+          <p class="metric-value" id="metric-threshold">—</p>
+        </div>
+      </div>
+
+      <div class="confidence-bar-wrap">
+        <div class="confidence-bar-track">
+          <div class="confidence-bar-fill" id="confidence-bar"></div>
+          <div class="confidence-threshold-marker" id="threshold-marker"></div>
+        </div>
+        <div class="confidence-labels">
+          <span>No Match</span>
+          <span>Match</span>
+        </div>
+      </div>
+
+      <button class="reset-btn" id="reset-btn">↩ Verify Another Pair</button>
+    </section>
+
+    <!-- Error card -->
+    <section class="card error-card hidden" id="error-card">
+      <div class="error-icon">⚠️</div>
+      <p class="error-msg" id="error-msg">An unexpected error occurred.</p>
+      <button class="reset-btn" id="error-reset-btn">Try Again</button>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>SignVerify AI · Siamese Network · TensorFlow · FastAPI on Render · Vercel</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

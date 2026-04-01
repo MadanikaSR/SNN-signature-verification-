@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: signature-verification-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: MODEL_PATH
+        value: /data/models/siamese_signature_model.h5
+      - key: ENCODER_PATH
+        value: /data/models/signature_encoder.h5
+      - key: MATCH_THRESHOLD
+        value: "0.5"
+      - key: IMG_SIZE
+        value: "128"
+      - key: MAX_FILE_SIZE_MB
+        value: "2"
+      - key: ALLOWED_ORIGINS
+        value: "https://YOUR_VERCEL_APP.vercel.app"
+    disk:
+      name: model-storage
+      mountPath: /data/models
+      sizeGB: 1

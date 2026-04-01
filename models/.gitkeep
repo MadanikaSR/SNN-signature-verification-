@@ -1,0 +1,3 @@
+# models directory — ML model files (.h5) are stored here.
+# ⚠️  Do NOT commit .h5 files to git — they are excluded via .gitignore.
+# Upload your trained models directly to Render's persistent disk.
