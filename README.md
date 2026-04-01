@@ -52,7 +52,7 @@ signature-verification/
 │   ├── style.css               # glassmorphism dark theme
 │   ├── app.js                  # env-aware API calls + cold-start retry
 │   └── vercel.json             # Vercel static routing + security headers
-├── models/                     # .h5 files — git-ignored, upload to Render disk
+├── models/                     # .h5 files — included in repo for easy Docker deployment
 ├── render.yaml                 # Render infrastructure-as-code config
 ├── .env.example                # Environment variable template
 ├── requirements.txt
@@ -136,35 +136,18 @@ Place your `.h5` model files in `./models/` before starting — they are mounted
    - **Runtime**: Docker
    - **Dockerfile Path**: `./Dockerfile`
    - **Instance Type**: Free
-5. Add a **Persistent Disk**:
-   - Mount path: `/data/models`
-   - Size: 1 GB
-6. Set these **Environment Variables** in the Render dashboard:
+5. Set these **Environment Variables** in the Render dashboard:
 
    ```
-   MODEL_PATH    = /data/models/siamese_signature_model.h5
-   ENCODER_PATH  = /data/models/signature_encoder.h5
+   MODEL_PATH    = models/siamese_signature_model.h5
+   ENCODER_PATH  = models/signature_encoder.h5
    MATCH_THRESHOLD = 0.5
    IMG_SIZE      = 128
    MAX_FILE_SIZE_MB = 2
    ALLOWED_ORIGINS = https://YOUR_VERCEL_APP.vercel.app  <!-- TODO: update after Vercel deploy -->
    ```
 
-7. After deploy, open **Render Shell** and upload model files:
-   ```bash
-   # In Render Shell — download from GitHub Release assets
-   cd /data/models
-   curl -L -o siamese_signature_model.h5 \
-     https://github.com/MadanikaSR/SNN-signature-verification-/releases/download/v1.0/siamese_signature_model.h5
-     # TODO: Create a GitHub Release v1.0 and upload the .h5 files as assets first
-
-   curl -L -o signature_encoder.h5 \
-     https://github.com/MadanikaSR/SNN-signature-verification-/releases/download/v1.0/signature_encoder.h5
-
-   ls -lh  # verify files exist
-   ```
-
-8. **Restart** the Render service — check logs for `✅ Model loaded successfully.`
+6. Render will automatically pull the models from the repository and build the Docker image. Keep an eye on the deployment logs for `✅ Model loaded successfully.`
 
 <!-- TODO: Add your Render URL here after deployment -->
 <!-- Render URL: https://YOUR_SERVICE.onrender.com -->
@@ -200,15 +183,7 @@ Place your `.h5` model files in `./models/` before starting — they are mounted
 
 ## Model Files
 
-The trained `.h5` model files are **not committed to git** (they are in `.gitignore`).  
-To make them available for Render deployment, upload them as **GitHub Release assets**:
-
-1. Go to the [Releases page](https://github.com/MadanikaSR/SNN-signature-verification-/releases) <!-- TODO: confirm this URL is correct -->
-2. Click **Draft a new release** → tag `v1.0`
-3. Upload:
-   - `models/siamese_signature_model.h5` (~4.9 MB)
-   - `models/signature_encoder.h5` (~1.7 MB)
-4. Publish the release
+The trained `.h5` model files (~6 MB total) are included directly in the repository. Docker and Render will automatically load them on startup without any extra configuration.
 
 ---
 
@@ -270,7 +245,7 @@ Training-only variables (`CEDAR_ROOT`, `TRAIN_EPOCHS`, `TRAIN_BATCH_SIZE`, `TRAI
 ## Security Notes
 
 - **CORS**: Never use `"*"` in production. Set `ALLOWED_ORIGINS` to your exact Vercel URL.
-- **Models**: `.h5` files are excluded from git. Upload via Render Shell or GitHub Releases.
+- **Models**: `.h5` files are included directly in the repo for easy deployment on the Free tier.
 - **Secrets**: Never commit `.env`. Only `.env.example` is tracked.
 
 ---

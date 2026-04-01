@@ -17,12 +17,7 @@ build/
 venv/
 env/
 
-# ML Models (large binary files — upload separately to Render)
-models/*.h5
-models/*.keras
-models/*.pkl
-models/*.pt
-models/*.pth
+
 
 # Jupyter
 .ipynb_checkpoints/

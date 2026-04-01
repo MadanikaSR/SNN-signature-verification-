@@ -23,13 +23,10 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application source
+# Copy application source and modeks
 COPY app/ ./app/
+COPY models/ ./models/
 COPY .env.example .env.example
-
-# Models dir — populated at runtime via Render persistent disk (/data/models)
-# or locally via the models/ folder
-RUN mkdir -p models /data/models
 
 EXPOSE 8000
 
